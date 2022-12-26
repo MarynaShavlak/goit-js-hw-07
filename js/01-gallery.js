@@ -43,13 +43,22 @@ function onGalleryCardClick(event) {
   }
   const originalImageURL = galleryCard.dataset.source;
   showOriginalImage(originalImageURL);
-  document.addEventListener('keydown', hideOriginalImage, { once: true });
 }
 
 function showOriginalImage(originalImgURL) {
-  modalImage = basicLightbox.create(`
+  modalImage = basicLightbox.create(
+    `
     <img src="${originalImgURL}" width="800" height="600">
-`);
+`,
+    {
+      onShow: modalImage => {
+        document.addEventListener('keydown', hideOriginalImage);
+      },
+      onclose: modalImage => {
+        document.removeEventListener('keydown', hideOriginalImage);
+      },
+    },
+  );
   modalImage.show();
 }
 
